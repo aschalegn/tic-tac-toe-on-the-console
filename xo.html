@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title> Tic Tac Toe </title>
+</head>
+
+<body>
+    </main>
+    <script>
+
+        let board = [
+            [undefined, undefined, undefined],
+            [undefined, undefined, undefined],
+            [undefined, undefined, undefined]
+        ];
+
+        function getPlayers() {
+            name = prompt("Pleas insert your name");
+            while (name === undefined || name === "" || !(isNaN(name)) || name == 'null') {
+                name = prompt("Pleas insert your name");
+            }
+            alert(`Hi ${name} wellcome to the game`);
+            return name;
+        }
+
+        let player1 = getPlayers();
+        let player2 = getPlayers();
+        let player1Sign = "X";
+        let player2Sign = "O";
+        let iswinner = false;
+        console.log(player1, player2);
+
+        function choosePosition(player) {
+            let isvalid = false;
+            numericChoise = [];
+            do {
+                let playerChoise = prompt(`${player} choose a position as the next pattern row comma column ex: 1,0`);
+                if (playerChoise == null || playerChoise == undefined || playerChoise == "") {
+                    alert("please Insert your position");
+                }
+                else {
+                    playerChoise = playerChoise.split(",");
+                    if (playerChoise.length == 2) {
+                        for (let i = 0; i < playerChoise.length; i++) {
+                            let numberify = Number(playerChoise[i]);
+                            if (isNaN(numberify) || !(Number.isInteger(numberify))) {
+                                alert("insert pair of Integers numbers with coma between please");
+                                isvalid = false;
+                                break
+                            }
+                            else if ((numberify > board.length - 1) || (numberify > board[i].length - 1)) {
+                                alert("Out of range");
+                                isvalid = false;
+                                break
+                            }
+                            else {
+                                numericChoise[i] = numberify;
+                                isvalid = true;
+                            }
+                        }
+                    }
+
+                    if (isvalid) {
+                        if (board[numericChoise[0]][numericChoise[1]] == undefined) {
+                            for (let i = 0; i < board.length; i++) {
+                                for (let j = 0; j < board[i].length; j++) {
+                                    if (numericChoise[0] == i && numericChoise[1] == j) {
+                                        if (player == player1) {
+                                            board[numericChoise[0]][numericChoise[1]] = player1Sign;
+                                            if (checkWinner(player1)) {
+                                                iswinner = true;
+                                                console.log(`${player} is the winner`);
+                                                return board;
+                                            }
+
+                                        } else {
+                                            board[numericChoise[0]][numericChoise[1]] = player2Sign;
+                                            if (checkWinner(player2)) {
+                                                iswinner = true;
+                                                console.log(`${player} is the winner`);
+                                                return board;
+                                            }
+                                        }
+                                        return board;
+                                    }
+                                }
+                            }
+                        } else {
+                            alert`the position ${numericChoise} is not availeable`;
+                            isvalid = false
+                        }
+                    }
+                }
+            } while (isvalid == false);
+        }
+
+        function checkWinner(player) {
+            let horizontalCounter = 0;
+            let verticalalCounter = 0;
+            let slantCounter = 0
+            let slantReverseCounter = 0
+
+            for (let i = 0; i < board.length; i++) {
+
+
+                for (let j = 0; j < board[i].length; j++) {
+                    if (i < board.length - 1) {
+                        if (board[i][j] === board[i + 1][j + 1] && board[i][j] != undefined) {
+                            slantCounter++;
+                            if (slantCounter == board.length - 1) {
+                                return true;
+                            }
+                        }
+                    }
+
+                    // wins in horizontal
+                    if (j < board[i].length - 1) {
+                        if (board[i][j] === board[i][j + 1] && (board[i][j] !== undefined)) {
+                            horizontalCounter++;
+                            if (horizontalCounter === board[i].length) {
+                                return true;
+                            }
+                        }
+                    }
+
+                    // wins verticly
+                    if (i < board.length - 1) {
+                        if ((board[i][j] == board[i + 1][j]) && (board[i][j] !== undefined)) {
+                            verticalalCounter++;
+                            if (verticalalCounter === board.length) {
+                                return true;
+                            }
+                        }
+                    }
+
+                    if (i < board.length - 1) {
+                        if ((board[i][j] == board[i + 1][j - 1]) && (board[i][j] !== undefined)) {
+                            slantReverseCounter++
+                            if (slantReverseCounter == board[i].length) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+
+        }
+
+        function Play() {
+            let Player1Round = 0;
+            let Player2Round = 0;
+            function checkIfFull() {
+                for (let i = 0; i < board.length; i++) {
+                    for (let j = 0; j < board[i].length; j++) {
+                        if (board[i][j] == undefined) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            while (!iswinner) {
+                if (checkIfFull() == false) {
+                    if (Player1Round > Player2Round) {
+                        console.log("Turn of " + player2);
+                        Player2Round++;
+                        choosePosition(player2).forEach(row => {
+                            console.log(row);
+                        });
+
+                    } else {
+                        Player1Round++
+                        console.log("Turn of " + player1);
+                        choosePosition(player1).forEach(row => {
+                            console.log(row);
+                        });
+
+                    }
+                }
+            }
+        }
+
+        Play();
+    </script>
+</body>
+
+</html>
